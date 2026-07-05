@@ -209,7 +209,7 @@ def scan(paths: list) -> int:
     Matches inside backticks (regex documentation) are skipped.
     Exit code 0 — clean, 1 — markers found.
     """
-    compiled = {name: re.compile(case[0]) for name, case in CASES.items()}
+    compiled = {name: re.compile(pattern) for name, (pattern, *_) in CASES.items()}
     found = 0
     for path in paths:
         try:

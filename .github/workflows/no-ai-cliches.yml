@@ -1,0 +1,86 @@
+name: Self-check the skill for AI clichés
+
+# A skill that strips AI slop should meet its own bar. This workflow
+# catches AI-cliché phrases in SKILL.md and README.md before users see
+# them. The English counterpart of humanizer-ru's no-anglicisms.yml.
+#
+# The PR fails if any blacklist phrase appears in the skill's OWN prose.
+# Phrases wrapped in `backticks` or "quotes" are treated as examples
+# (the skill teaches what to avoid) and are exempt.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'SKILL.md'
+      - 'README.md'
+  pull_request:
+    paths:
+      - 'SKILL.md'
+      - 'README.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  no-ai-cliches:
+    name: Scan the skill's own prose for clichés
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Scan SKILL.md and README.md against the cliché blacklist
+        run: |
+          set -euo pipefail
+
+          # Blacklist — phrases the skill itself flags as AI slop.
+          # Only the skill's own prose is checked; the reference files
+          # legitimately contain these phrases as before/after examples.
+          BLACKLIST=(
+            'delve into'
+            'delving into'
+            'a rich tapestry'
+            'navigating the complexities'
+            "in today's fast-paced world"
+            'it is worth noting that'
+            'in the ever-evolving landscape'
+            'the possibilities are endless'
+            'at the end of the day'
+          )
+
+          FAIL=0
+          FILES=(SKILL.md README.md)
+
+          for phrase in "${BLACKLIST[@]}"; do
+            for file in "${FILES[@]}"; do
+              if [[ ! -f "$file" ]]; then continue; fi
+              # -i: case-insensitive; -nF: line number, fixed string
+              # || true so the pipeline does not fail when there are no matches
+              hits=$(grep -inF -- "$phrase" "$file" || true)
+              if [[ -n "$hits" ]]; then
+                while IFS= read -r line; do
+                  lineno="${line%%:*}"
+                  content="${line#*:}"
+                  # Exempt phrases used as examples: wrapped in backticks,
+                  # straight quotes, or curly quotes.
+                  if echo "$content" | grep -qiF -- "\`$phrase\`"; then continue; fi
+                  if echo "$content" | grep -qiF -- "\"$phrase\""; then continue; fi
+                  if echo "$content" | grep -qiF -- "“$phrase”"; then continue; fi
+                  echo "::error file=$file,line=$lineno::AI cliché '$phrase' in $file:$lineno"
+                  echo "  $line"
+                  FAIL=1
+                done <<< "$hits"
+              fi
+            done
+          done
+
+          if [[ "$FAIL" -ne 0 ]]; then
+            echo ""
+            echo "The anti-AI-slop skill contains AI clichés in its own prose."
+            echo "Rewrite the phrase, or wrap it in backticks/quotes if it is an example."
+            exit 1
+          fi
+
+          echo "Blacklist passed — no AI clichés in SKILL.md or README.md."

@@ -1,0 +1,35 @@
+name: Regular-expression run
+
+# Regression protection for the unambiguous markers: every regex from
+# references/chatbot-artifacts.md is run against the test samples
+# (positive / negative / boundary) in scripts/check_markers.py.
+# Before v2.6 the run was manual (PowerShell in test-fixtures.md) —
+# it is now automated and mandatory for every PR.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/**'
+      - 'references/chatbot-artifacts.md'
+      - 'references/test-fixtures.md'
+  pull_request:
+    paths:
+      - 'scripts/**'
+      - 'references/chatbot-artifacts.md'
+      - 'references/test-fixtures.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check-markers:
+    name: Check markers against samples
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run every regex across three sample levels
+        run: python3 scripts/check_markers.py

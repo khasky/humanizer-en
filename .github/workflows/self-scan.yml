@@ -1,0 +1,38 @@
+name: Self-scan for the skill's own markers
+
+# The skill checks itself: every .md, .py and .yml file in the project
+# is run through check_markers.py --scan. Matches inside backticks
+# (regex documentation) are skipped automatically. Added in v2.8.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**.md'
+      - '**.py'
+      - '**.yml'
+  pull_request:
+    paths:
+      - '**.md'
+      - '**.py'
+      - '**.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  self-scan:
+    name: Check for markers in the skill's own text
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run --scan over every project file
+        run: |
+          find . -type f \( -name '*.md' -o -name '*.py' -o -name '*.yml' \) \
+            ! -path './.git/*' ! -path './node_modules/*' \
+            ! -path './scripts/check_markers.py' \
+            ! -path './references/test-fixtures.md' \
+            -exec python3 scripts/check_markers.py --scan {} +

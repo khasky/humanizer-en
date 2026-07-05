@@ -1,6 +1,6 @@
 # Humanizer EN
 
-A skill for AI agents. Removes the traces of machine generation from English text. The English counterpart of [humanizer-ru](https://github.com/Vladimir-Human/humanizer-ru).
+A skill for AI agents. Removes the traces of machine generation from English text. English adaptation of [humanizer-ru](https://github.com/Vladimir-Human/humanizer-ru) by Vladimir-Human. The pattern catalog and file architecture originate in that project; this repository adapts and rewrites them for English text.
 
 ## Install and integration
 
@@ -212,24 +212,6 @@ Stylistic tells by vendor, current as of July 2, 2026: OpenAI GPT-5.5 (flagship 
 
 - [Wikipedia:Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing)
 - [WikiProject AI Cleanup](https://en.wikipedia.org/wiki/Wikipedia:WikiProject_AI_Cleanup)
-
-## Versions
-
-- **2.9.0** (July 4, 2026) — Gemini artifacts, Unicode watermarks, and the regulatory layer. Two new unambiguous-marker sections: Gemini citation tags `[cite_start]` / `[cite: 8]` leaking during PDF analysis (section A.9), and zero-width characters `U+200B`–`U+200D`, `U+2060`, `U+FEFF` (section A.10; homoglyph spaces like `U+202F` are left to manual review — French typography and layout cause false positives). Two pattern extensions from English "Signs of AI writing": #6a "Named pseudo-attribution of the RAG era" and #23a "Statement of unavailability with speculation". In the false-positive guard — §14 "Non-standard spaces". In the fingerprints — Article 50 of the EU AI Act (from August 2, 2026), the code of practice of June 10, 2026, and the Anthropic Claude Fable 5 / Sonnet 5 flagship line (June–July 2026). 36 patterns, 23 regexes (23 of 23 pass). Existing rules untouched.
-- **2.8.0** (June 11, 2026) — brainstorm over fresh catalogs and 2026 research. New unambiguous marker: file_search markers `turn0file2` / `fileciteturn0file2turn0file6` (OpenAI developer forum, strongest on GPT-5.2). Two pattern extensions: #15e "Formulaic collocations and AI-favourite phrases", #15f "Lack of idiom" (arXiv:2405.09279), #24a "Pseudo-therapeutic register and fake liveliness" (legacy of the withdrawn GPT-4o mode). In the false-positive guard — §13 "Different error types in humans and models". In the fingerprints — syntactic stylometry (93–98% accuracy) and density uniformity (DivEye). The checker gained a `--scan` mode for arbitrary text, and a third workflow `self-scan.yml` was added. 35 patterns, 20 regexes (20 of 20 pass). Existing rules untouched.
-- **2.7.0** (June 11, 2026) — reconciliation with the current "Signs of AI writing" and the AI Cleanup project. New unambiguous marker: "Source+digit" run-ons (`ISO+3ISO+3`) — a ChatGPT footnote render error (section A.8). Two pattern extensions: #21a "Boilerplate section headings" and #25a "Mid-sentence cutoff". In the false-positive guard — "Ineffective indicators" and "Human syntax" (per the corpus study, PNAS 2025). In source checking — the stale access date. 31 patterns, 19 regexes (19 of 19 pass). Existing rules untouched.
-- **2.6.0** (June 11, 2026) — automated marker checking and two new unambiguous markers. Added `scripts/check_markers.py`: a run of every regex across three sample levels on the Python standard library, wired into CI (`regex-check.yml`). In `chatbot-artifacts.md` — section A.7: invisible ChatGPT citation control chars `U+E200–U+E204` and leftover reasoning tags `<think>` from DeepSeek and similar models. 18 regexes (18 of 18 pass). Existing rules untouched.
-- **2.5.0** (May 31, 2026) — substantive update. Four new unambiguous markers in `chatbot-artifacts.md`: Microsoft Copilot footnote `[^N^]`, OpenAI Assistants marker `【N†source】`, ChatGPT streaming marker `citeturn0file0`, broken data-analysis link `](sandbox:/mnt/data/`. 16 regexes (16 of 16 pass). In `llm-fingerprints.md`, added Perplexity, Amazon Nova, Cohere Command A+, Gemini Deep Research mode. In `false-positives.md`, added the section on academic and scientific register; the rule of three gained a boundary for opinion writing.
-- **2.4.0** (May 23, 2026) — rewrote the skill description. Activation words expanded from four to thirty-plus: explicit synonyms ("humanize", "make it sound human", "AI detector", "check for AI", "de-slop", "reads like a chatbot"), seven models by name. Added a "do not use" section with explicit boundaries: non-English text, code and scripts, legal documents, literary prose, poetry, and résumés. The skill body is unchanged — the edit is in the header only.
-- **2.3.0** (May 20, 2026) — SKILL.md turned into a map with links to the detail in `references/`. Added unambiguous markers with regexes (`chatbot-artifacts.md`), source-fabrication checks (`source-fabrication.md`), false-positive boundaries (`false-positives.md`), model fingerprints (`llm-fingerprints.md`), and test fixtures (`test-fixtures.md`). Four extensions (#15a–15d): dangling modifiers, hedging cascade, transition crutches and conclusion filler, abrupt style shift. Regexes run: 12 of 12 pass. Nothing old was broken.
-- **2.2.0** — Updated compatibility (added Claude.ai), added metadata tags, edge-case handling (non-English text, code), fixed the install instructions. Strengthened patterns #1 and #13 with sub-variants (horoscope statements, symmetric sections).
-- **2.1.0** — Added an explicit activation trigger to the description per the agentskills.io spec. Added license, compatibility, and metadata fields at the top of the file.
-- **2.0.0** — Added patterns #1 (Regression to the mean), #9 (Text about the text), #19 (Tables), #20 (Markdown), #21 (Hierarchy). The 🔴/🟡/🟢 severity scale. Expanded the marker dictionaries. 25 patterns.
-- **1.0.0** — First release. 22 patterns.
-
-## Credits
-
-English adaptation of [humanizer-ru](https://github.com/Vladimir-Human/humanizer-ru) by Vladimir-Human, used under the MIT License. The pattern catalog and file architecture originate in that project; this repository adapts and rewrites them for English text.
 
 ## License
 
